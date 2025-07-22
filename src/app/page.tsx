@@ -1,14 +1,15 @@
+"use client";
 import styles from "@/styles/Home.module.css";
 import AuthWrapper from "./AuthWrapper";
 import MainPrompt from "../components/MainPrompt/MainPrompt";
 
 const Home = () => {
   return (
-    <AuthWrapper>
-      <div className={styles.main}>
+    <div className={styles.main}>
+      <AuthWrapper>
         <MainPrompt />
-      </div>
-    </AuthWrapper>
+      </AuthWrapper>
+    </div>
   );
 };
 
