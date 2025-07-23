@@ -6,10 +6,10 @@ import MainPrompt from "../components/MainPrompt/MainPrompt";
 const Home = () => {
   return (
     <div className={styles.main}>
-      <AuthWrapper>
+    <AuthWrapper>
         <MainPrompt />
       </AuthWrapper>
-    </div>
+      </div>
   );
 };
 
