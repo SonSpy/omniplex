@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-export const dynamic = "force-dynamic"; // 👈 Ensures runtime execution, not build time
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-06-30.basil",
-});
+export const dynamic = "force-dynamic"; // ensures runtime execution
 
 export async function POST() {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2025-06-30.basil",
+  });
+
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
