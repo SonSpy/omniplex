@@ -1,4 +1,4 @@
-name: Build and deploy Node.js app to Azure Web App - omniplex-vishal
+name: Build and deploy Next.js app to Azure Web App - omniplex-vishal
 
 on:
   push:
@@ -21,10 +21,13 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: Install dependencies and build
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and export static site
         run: |
-          npm install
           npm run build
+          npm run export
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENWEATHERMAP_API_KEY: ${{ secrets.OPENWEATHERMAP_API_KEY }}
@@ -39,17 +42,14 @@ jobs:
           NEXT_PUBLIC_FIREBASE_MESSAGE_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGE_ID }}
           NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
 
-      - name: Prepare app for deployment
+      - name: Prepare release artifact
         run: |
-          mkdir deploy
-          cp -r .next public package.json package-lock.json pages components styles app deploy/ || true
-          cd deploy
-          zip -r ../release.zip .
+          zip -r release.zip out
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: node-app
+          name: exported-app
           path: release.zip
 
   deploy:
@@ -63,7 +63,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: node-app
+          name: exported-app
 
       - name: Unzip artifact
         run: unzip release.zip
@@ -80,4 +80,4 @@ jobs:
         with:
           app-name: 'omniplex-vishal'
           slot-name: 'Production'
-          package: .
+          package: ./out
